@@ -7,13 +7,13 @@ interface Deployment {
 
 const removeInactiveDeployments = async (
     token: string,
-    username: string,
-    repoName: string
+    repoName: string,
+    username: string
 ) => {
     const URL = `https://api.github.com/repos/${username}/${repoName}/deployments`;
     const config = {
         headers: {
-            Authorization: `Token ${token}`,
+            authorization: `token ${token}`,
         },
     };
 
@@ -21,13 +21,23 @@ const removeInactiveDeployments = async (
         const deployments = await axios.get<Deployment[]>(URL, config);
         console.log(`${deployments.data.length} deployments found`);
 
-        const inactiveDeployments = deployments.data.filter(
-            (deployment) => deployment.state === "inactive"
+        const inactiveDeployments = await Promise.all(
+            deployments.data.map(async (deployment) => {
+                const statuses = await axios.get<{ state: string }[]>(
+                    `${URL}/${deployment.id}/statuses`,
+                    config
+                );
+                if (statuses.data[0].state === "inactive") {
+                    return deployment;
+                }
+            })
         );
-        console.log(`${inactiveDeployments.length} inactive deployments found`);
 
         const deletedDeployments = await Promise.all(
             inactiveDeployments.map(async (deployment) => {
+                if (!deployment) {
+                    return;
+                }
                 const response = await axios.delete(
                     `${URL}/${deployment.id}`,
                     config
