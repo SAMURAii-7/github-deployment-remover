@@ -64,6 +64,7 @@ function UserInput({}: Props) {
                 <input
                     type="checkbox"
                     id="removeAll"
+                    checked={removeAll}
                     onChange={() => setRemoveAll(!removeAll)}
                 />
                 <label className="pt-4 pb-2 ml-2" htmlFor="removeAll">
