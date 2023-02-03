@@ -19,6 +19,7 @@ function UserInput({}: Props) {
         setToken("");
         setRepo("");
         setUser("");
+        setRemoveAll(false);
     };
 
     return (
