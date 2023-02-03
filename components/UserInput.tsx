@@ -12,9 +12,9 @@ function UserInput({}: Props) {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(token, repo, user);
         if (removeAll) removeDeployments(token, repo, user);
         else removeInactiveDeployments(token, repo, user);
+        alert("Deployments removed successfully!");
 
         setToken("");
         setRepo("");
