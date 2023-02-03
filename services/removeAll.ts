@@ -1,7 +1,7 @@
 import axios from "axios";
 
 interface Deployment {
-    id: number;
+    id: string;
 }
 
 const removeDeployments = async (
